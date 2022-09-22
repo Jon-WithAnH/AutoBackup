@@ -8,15 +8,21 @@ import src.ConfigPackage.ConfigHandler;
 
 
 public class Copier {
+    Boolean ENABLE_COPY = true;
+    
     ConfigHandler cHandler = new ConfigHandler();
     StringBuilder placementDirectories = cHandler.readPlacementDirectory();
 
     /** These variables are used the store the values of working directories that will be used to copy the new file. currentParents holds the string for the .. name.
      * Parent start holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value as recursion is used.
      */
-    String currentParent = "";
+    String currentParent;
     int parentStart;
 
+    /**
+     * Main function of the class. It goes.
+     * @throws IOException Bad access
+     */
     public void go() throws IOException {
         StringBuilder copyFromDirectories = cHandler.getDirectories();
 
@@ -76,8 +82,10 @@ public class Copier {
 
             String dest = String.join(File.separator, s, f.toString().substring(helper+1)); // This is the new location of the file, with the file name at the end
 
-            actualCopy(f, new File(dest));            
-            // System.out.println(f.toString() + " GOES TO " + dest);
+            if (this.ENABLE_COPY)
+                actualCopy(f, new File(dest));            
+            else
+                System.out.println(f.toString() + " GOES TO " + dest);
         }
 
     }

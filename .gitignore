@@ -1,2 +1,4 @@
 *.class
+./lib
 ./ConfigPackage/ConfigHandlerTest.java
+*.java
