@@ -2,7 +2,7 @@
 
 ## About
 
-Autobackup's purpose is to allow for automated backing up of selected folders. The user can choose any amount of folders and the program will go through them in order of first added to last added, and place them in a directory that the user initally provides (the provided directory is persistant). The user can choose how many backups to keep and if they want it stored redundantly (on multiple devices). 
+Autobackup's purpose is to allow for automated backing up of selected folders. The user can choose any amount of folders and the program will go through them in order of first added to last added, and place them in a directory that the user initally provides. The user can choose how many backups to keep and if they want it stored redundantly (on multiple devices). 
 
 ## Usage
 
