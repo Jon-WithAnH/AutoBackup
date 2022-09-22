@@ -15,7 +15,7 @@ java -jar AutoBackup.jar [args]
 - [x] Have user provide directory(s) to backup to
 - [ ] Backup Types
   - [x] Files
-  - [ ] Folders
+  - [x] Folders
 - [ ] Mode changing
   - [ ] Mode to allow for an iterative backup that doesn't store multiple copies of backups. Just unique files
   - [ ] Mode to backup all given files n number of times
