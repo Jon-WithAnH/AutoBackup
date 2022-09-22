@@ -77,6 +77,7 @@ public class ConfigHandler {
             FileWriter fw = new FileWriter(this.fullFilePath, true);
             fw.write(directoryToAdd + "\n");
             fw.close();
+            System.out.println("Successfully wrote to file: " + directoryToAdd);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

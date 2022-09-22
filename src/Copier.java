@@ -42,9 +42,11 @@ public class Copier {
      */
     private void getLinksInDir(File f) {
             File files[];
-            if(f.isFile())
+            if(f.isFile()){
+                while (!f.toString().contains(this.currentParent)) // walk back folders if we are in a folder we shouldn't be, until we find the common folder and use that instead.
+                    this.currentParent = this.currentParent.substring(0, this.currentParent.lastIndexOf(File.separator));
                 prepareFileForCopy(f);
-                // System.out.println(f.getAbsolutePath());
+                }// System.out.println(f.getAbsolutePath());
             else{
                 files = f.listFiles();
                 this.currentParent = f.toString().substring(this.parentStart); // update parent directory as we go further into recursion
