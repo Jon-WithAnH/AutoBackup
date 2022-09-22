@@ -25,9 +25,3 @@ java -jar AutoBackup.jar [args]
 - [ ] Mode changing
   - [x] Mode to allow for an iterative backup that doesn't store multiple copies of backups. Just unique files
   - [ ] Mode to backup all given files n number of times
-
-
-## Self Notes:
-
-Might want to think of some sort of <b>initalizition</b>. This would include <b>Mode Selection</b> and <b>the location of the backup directory(s)</b>. Maybe using the arg /i
-
