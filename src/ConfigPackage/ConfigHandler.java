@@ -82,7 +82,6 @@ public class ConfigHandler {
      */
     public void CreateFolderWithDefaults() {
 
-        // TODO: Use a global varable to change the name of the file for easier maintinence. 
         File folder = new File(this.autoBackupFolder);
         if (folder.mkdir())
             System.out.println(folder + " created");
@@ -205,7 +204,6 @@ public class ConfigHandler {
             readline = br1.readLine();
         }
         pw.flush();
-        // TODO: Make tmp.txt the new Directories.txt
         br1.close();
         pw.close();
         if (!deleted) // no point in continues if nothing was deleted
