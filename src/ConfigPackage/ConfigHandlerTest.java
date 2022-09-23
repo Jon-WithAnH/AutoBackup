@@ -22,7 +22,7 @@ public class ConfigHandlerTest {
 
     @Test
     public void testAppendDirectory() throws IOException {
-        assertTrue(cHandler.appendDirectory("C:\\Users\\avera\\OneDrive\\Documents\\Rockstar Games\\Red Dead Redemption 2"));
+        assertTrue(cHandler.appendDirectory("C:\\Users\\avera\\OneDrive\\Documents\\Rockstar Games\\Red Dead Redemption 2", cHandler.directoriesToBackup));
         assertTrue(cHandler.deleteDirectory("C:\\Users\\avera\\OneDrive\\Documents\\Rockstar Games\\Red Dead Redemption 2"));
     }
 
@@ -45,9 +45,6 @@ public class ConfigHandlerTest {
 
     @Test
     public void testWriteDefault() {
-        // ConfigHandler cHandler = new ConfigHandler();
-        // cHandler.CreateFolderWithDefaults();
-        // cHandler.appendDirectory("C:\\Users\\avera\\OneDrive\\Documents\\Rockstar Games\\Red Dead Redemption 2");
-        assertFalse("Test failed using an invalid directory", this.cHandler.appendDirectory("C:\\Invalid44681618545"));
+        assertFalse("Test failed using an invalid directory", this.cHandler.appendDirectory("C:\\Invalid44681618545", cHandler.directoriesToBackup));
     }
 }
