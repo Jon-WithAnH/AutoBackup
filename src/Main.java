@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Beginning execution...");
         if (args.length > 0){
-            for (int i = 0; i < args.length-1; i++)
+            for (int i = 0; i < args.length-1; i++){
                 // System.out.println(args[i]);
                 if (args[0].equals("-h")){
                     printHelp();
@@ -24,17 +24,18 @@ public class Main {
                     ConfigHandler cHandler = new ConfigHandler();
                     cHandler.appendDirectory(args[1], cHandler.placementDirectory);
                     return;
-            }
+                }
                 if (args[0].equals("-d")){
                     ConfigHandler cHandler = new ConfigHandler();
                     cHandler.deleteDirectory(args[1]);
                     return;
+                }
             }
         }
 
         Copier c = new Copier();
         c.go();
-        System.out.println("AutoBackup completed successfully.");
+        System.out.println("AutoBackup completed successfully. " + c.filesCopied + " file(s) were backed up.");
         
     }
 

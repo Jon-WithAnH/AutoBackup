@@ -19,6 +19,9 @@ public class Copier {
     String currentParent;
     int parentStart;
 
+    /** Incremented every time a file is successfully copied. Keeps track for reporting to main. */
+    int filesCopied = 0; 
+
     /**
      * Main function of the class. It goes.
      * @throws IOException Bad access
@@ -93,6 +96,7 @@ public class Copier {
     private void actualCopy(File src, File dest) {
         try {
           Files.copy(src.toPath(), dest.toPath());
+          this.filesCopied++;
           System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
             System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
