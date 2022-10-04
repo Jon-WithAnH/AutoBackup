@@ -9,24 +9,21 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Beginning execution...");
         if (args.length > 0){
+            ConfigHandler cHandler = new ConfigHandler();
             for (int i = 0; i < args.length-1; i++){
-                // System.out.println(args[i]);
                 if (args[0].equals("-h")){
                     printHelp();
                     return;
                 }
                 if (args[0].equals("-a")){
-                        ConfigHandler cHandler = new ConfigHandler();
                         cHandler.appendDirectory(args[1], cHandler.directoriesToBackup);
                         return;
                 }
                 if (args[0].equals("-p")){ // stands for place
-                    ConfigHandler cHandler = new ConfigHandler();
                     cHandler.appendDirectory(args[1], cHandler.placementDirectory);
                     return;
                 }
                 if (args[0].equals("-d")){
-                    ConfigHandler cHandler = new ConfigHandler();
                     cHandler.deleteDirectory(args[1]);
                     return;
                 }

@@ -23,6 +23,7 @@ public class ConfigHandler {
         this.directoriesToBackup = appdataLocation + File.separator + "AutoBackup" + File.separator + "Directories.txt";
         this.placementDirectory = this.autoBackupFolder + File.separator + "PlacementLocations.txt";
         createPlacementDirectory();
+        CreateFolderWithDefaults();
     }
 
     /**
@@ -107,7 +108,7 @@ public class ConfigHandler {
      */
     String validateFileFolder(){
         Scanner scan = new Scanner(System.in);
-        File verification = new File(scan.next());
+        File verification = new File(scan.nextLine());
 
         while (!verification.exists()){
             System.out.println("Folder/File not found: " + verification);
@@ -123,7 +124,7 @@ public class ConfigHandler {
     void writeDefault(){
         try {
             FileWriter myWriter = new FileWriter(this.directoriesToBackup);
-            
+            System.out.println("Please enter a directory to backup:");
             String fileToWrite = validateFileFolder();
 
             myWriter.write(fileToWrite);

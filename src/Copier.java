@@ -16,6 +16,7 @@ public class Copier {
     /** These variables are used the store the values of working directories that will be used to copy the new file. currentParents holds the string for the .. name.
      * Parent start holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value as recursion is used.
      */
+    
     String currentParent;
     int parentStart;
 
@@ -99,9 +100,10 @@ public class Copier {
           this.filesCopied++;
           System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
-            System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
+            // Common error that will occur if a file has already been copied of the same name.
+            // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
         } catch (Exception e) {
-
+            System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" and " + dest.toString());
             throw new RuntimeException(e.getMessage(), e);
         }
         
