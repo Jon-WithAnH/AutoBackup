@@ -22,6 +22,8 @@ public class Copier {
 
     /** Incremented every time a file is successfully copied. Keeps track for reporting to main. */
     int filesCopied = 0; 
+    /** Incremented every time a file is scanned, regardless of it's copy status. */
+    int filesScanned = 0;
 
     /**
      * Main function of the class. It goes.
@@ -58,6 +60,11 @@ public class Copier {
                 prepareFileForCopy(f);
                 }// System.out.println(f.getAbsolutePath());
             else{
+                if (f.isHidden()){
+                    System.out.println(f + " is hidden & skipped.");
+                    this.filesScanned++;
+                    return;
+                }
                 files = f.listFiles();
                 this.currentParent = f.toString().substring(this.parentStart); // update parent directory as we go further into recursion
                 for (int i = 0; i < files.length; i++) {
@@ -98,10 +105,12 @@ public class Copier {
         try {
           Files.copy(src.toPath(), dest.toPath());
           this.filesCopied++;
+          this.filesScanned++;
           System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
             // Common error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
+            this.filesScanned++;
         } catch (Exception e) {
             System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" and " + dest.toString());
             throw new RuntimeException(e.getMessage(), e);
