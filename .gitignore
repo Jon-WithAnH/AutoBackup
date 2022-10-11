@@ -1,4 +1,7 @@
+
 *.class
 ./lib
 ./ConfigPackage/ConfigHandlerTest.java
 *.java
+# Used locally to make replacing AutoBackup.jar move convienent
+replaceAB.bat
