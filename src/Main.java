@@ -32,7 +32,7 @@ public class Main {
 
         Copier c = new Copier();
         c.go();
-        System.out.println("AutoBackup completed successfully. " + c.filesCopied + " file(s) were backed up.");
+        System.out.println("AutoBackup completed successfully: " + c.filesScanned + " file(s) scanned & " + c.filesCopied + " file(s) backed up.");
         
     }
 
