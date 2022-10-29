@@ -8,19 +8,18 @@ import src.ConfigPackage.ConfigHandler;
 
 
 public class Copier {
-    Boolean ENABLE_COPY = true;
+    Boolean ENABLE_COPY = false;
     
     ConfigHandler cHandler = new ConfigHandler();
     StringBuilder placementDirectories = cHandler.readPlacementDirectory();
 
-    /** These variables are used the store the values of working directories that will be used to copy the new file. currentParents holds the string for the .. name.
-     * Parent start holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value as recursion is used.
-     */
-    
+    /** Used to store the values of working directories that will be used to copy the new file. Holds the string for the .. name. */
     String currentParent;
+
+    /** Holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value as recursion is used. */
     int parentStart;
 
-    /** Incremented every time a file is successfully copied. Keeps track for reporting to main. */
+    /** Incremented every time a file is successfully copied. */
     int filesCopied = 0; 
     /** Incremented every time a file is scanned, regardless of it's copy status. */
     int filesScanned = 0;
@@ -53,6 +52,13 @@ public class Copier {
      * @param f A file or a Directory
      */
     private void getLinksInDir(File f) {
+            // Hidden folders are oftened used as caches for programs. We'll just skipped those.
+            if (f.isHidden()){
+                System.out.println(f + " is hidden & was skipped.");
+                this.filesScanned++;
+                return;
+            }
+
             File files[];
             if(f.isFile()){
                 while (!f.toString().contains(this.currentParent)) // walk back folders if we are in a folder we shouldn't be, until we find the common folder and use that instead.
@@ -60,11 +66,6 @@ public class Copier {
                 prepareFileForCopy(f);
                 }// System.out.println(f.getAbsolutePath());
             else{
-                if (f.isHidden()){
-                    System.out.println(f + " is hidden & skipped.");
-                    this.filesScanned++;
-                    return;
-                }
                 files = f.listFiles();
                 this.currentParent = f.toString().substring(this.parentStart); // update parent directory as we go further into recursion
                 for (int i = 0; i < files.length; i++) {
@@ -95,22 +96,22 @@ public class Copier {
 
             if (this.ENABLE_COPY)
                 actualCopy(f, new File(dest));            
-            else
-                System.out.println(f.toString() + " GOES TO " + dest);
+            // else
+            //     System.out.println(f.toString() + " GOES TO " + dest);
         }
 
     }
 
     private void actualCopy(File src, File dest) {
+        this.filesScanned++;
+        
         try {
           Files.copy(src.toPath(), dest.toPath());
-          this.filesCopied++;
-          this.filesScanned++;
+          this.filesCopied++;          
           System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
             // Common error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
-            this.filesScanned++;
         } catch (Exception e) {
             System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" and " + dest.toString());
             throw new RuntimeException(e.getMessage(), e);
