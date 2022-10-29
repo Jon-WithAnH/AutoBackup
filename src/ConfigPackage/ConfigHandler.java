@@ -48,7 +48,10 @@ public class ConfigHandler {
                 appendDirectory(location, this.placementDirectory);
             
             }
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+            System.err.println("Error generating PlacementDirectory.txt");
+            // throw new IOException(ex.getMessage());
+        }
     }
 
     /**
