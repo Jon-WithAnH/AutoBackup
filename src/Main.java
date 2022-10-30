@@ -14,7 +14,7 @@ public class Main {
         System.out.println("Beginning execution...");
 
         Copier c = new Copier();
-        c.ENABLE_COPY = false;
+        // c.ENABLE_COPY = false;
         c.go();
         String copiedStatus = "were";
         if (!c.ENABLE_COPY)
