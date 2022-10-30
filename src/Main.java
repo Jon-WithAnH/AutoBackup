@@ -32,7 +32,11 @@ public class Main {
 
         Copier c = new Copier();
         c.go();
-        System.out.println("AutoBackup completed successfully: " + c.filesScanned + " file(s) scanned & " + c.filesCopied + " file(s) backed up.");
+        String copiedStatus = "were ";
+        if (!c.ENABLE_COPY)
+            copiedStatus = "would have been ";
+
+        System.out.println("AutoBackup completed successfully: " + c.filesScanned + " file(s) scanned & " + c.filesCopied + " file(s) " + copiedStatus + "backed up.");
         
     }
 

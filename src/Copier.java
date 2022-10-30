@@ -8,7 +8,7 @@ import src.ConfigPackage.ConfigHandler;
 
 
 public class Copier {
-    Boolean ENABLE_COPY = false;
+    Boolean ENABLE_COPY = true;
     
     ConfigHandler cHandler = new ConfigHandler();
     StringBuilder placementDirectories = cHandler.readPlacementDirectory();
@@ -16,7 +16,7 @@ public class Copier {
     /** Used to store the values of working directories that will be used to copy the new file. Holds the string for the .. name. */
     String currentParent;
 
-    /** Holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value as recursion is used. */
+    /** Holds the int value for it's location in the absolutePath()'s substring. It's used to adjust the currentParent's value recursively */
     int parentStart;
 
     /** Incremented every time a file is successfully copied. */
@@ -94,8 +94,7 @@ public class Copier {
 
             String dest = String.join(File.separator, s, f.toString().substring(helper+1)); // This is the new location of the file, with the file name at the end
 
-            if (this.ENABLE_COPY)
-                actualCopy(f, new File(dest));            
+            actualCopy(f, new File(dest));            
             // else
             //     System.out.println(f.toString() + " GOES TO " + dest);
         }
@@ -106,11 +105,12 @@ public class Copier {
         this.filesScanned++;
         
         try {
-          Files.copy(src.toPath(), dest.toPath());
+            if (this.ENABLE_COPY)
+              Files.copy(src.toPath(), dest.toPath());
           this.filesCopied++;          
           System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
-            // Common error that will occur if a file has already been copied of the same name.
+            // Error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
         } catch (Exception e) {
             System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" and " + dest.toString());

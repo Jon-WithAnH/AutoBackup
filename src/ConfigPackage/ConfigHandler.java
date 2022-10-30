@@ -16,14 +16,23 @@ public class ConfigHandler {
     public String directoriesToBackup;
 
     public String placementDirectory;
+    /** Used to prompt user for inputs into the two files to determine AutoBackup's configuration */
+    Scanner scanner;
 
     public ConfigHandler(){
         this.appdataLocation = System.getenv("APPDATA");
+        if (this.appdataLocation == null) // occurs when user OS is linux
+            this.appdataLocation = System.getProperty("user.home") + File.separator + ".local" + File.separator + "share";
         this.autoBackupFolder = appdataLocation + File.separator + "AutoBackup";
         this.directoriesToBackup = appdataLocation + File.separator + "AutoBackup" + File.separator + "Directories.txt";
         this.placementDirectory = this.autoBackupFolder + File.separator + "PlacementLocations.txt";
-        createPlacementDirectory();
-        CreateFolderWithDefaults();
+        if (createFolder()){
+            System.out.println("First time setup initialized. Thank you for using AutoBackup!");
+            scanner = new Scanner(System.in);
+            createPlacementDirectory();
+            createBackupDirectories();
+            scanner.close();
+        }
     }
 
     /**
@@ -33,23 +42,23 @@ public class ConfigHandler {
         // if doesn't exist
             // ask user for desired backup location
             // show user what they entered and confirm
-        File folder = new File(this.placementDirectory);
+        File folder = new File(this.placementDirectory); // auto backup folder must be created first
         try{
             if (folder.createNewFile()){
-                System.out.println(folder + " created");
                 System.out.println("Please provide the directory where the backup's should be placed (note: does not need to be an existing directory): ");
-                Scanner scan = new Scanner(System.in);
-                String location = scan.nextLine();
+                String location = this.scanner.nextLine();
                 while (!verifyDriveLetter(location)) {
                     System.out.println("Invalid drive letter and/or format provided. Please make sure the drive is connected and that it was entered correctly.");
-                    location = scan.nextLine();
+                    location = scanner.nextLine();
                 }
-                scan.close();
+                // scan.close();
                 appendDirectory(location, this.placementDirectory);
             
             }
         } catch (IOException ex) {
             System.err.println("Error generating PlacementDirectory.txt");
+            ex.printStackTrace();
+            System.exit(-1);
             // throw new IOException(ex.getMessage());
         }
     }
@@ -80,18 +89,21 @@ public class ConfigHandler {
     public StringBuilder readPlacementDirectory(){
         return readAllText(this.placementDirectory);
     }
-
     /**
-     * Creates the AutoBackup folder along with Directories.txt
+     * Creates the install directory the program will run in and the program's config files will be places in.
+     * @return True if the folder is created. This is synonmous with it being the user's first time running the programs. False if otherwise.
      */
-    public void CreateFolderWithDefaults() {
-
+    private boolean createFolder(){
         File folder = new File(this.autoBackupFolder);
-        if (folder.mkdir())
-            System.out.println(folder + " created");
-        
-        // System.out.println(fileName);
+        return folder.mkdir();
+    }
+    /**
+     * Creates Directories.txt
+     */
+    public void createBackupDirectories() {
         File f = new File(this.directoriesToBackup);
+        // TODO: Func should prompt user for first entry. This is to keep it consistant with #createPlacementDirectory(). 
+        // Right now, it's handled somewhere else in the file.
         try {
             if (f.createNewFile()){
                 System.err.println("File \"" + this.directoriesToBackup + "\" created");
@@ -110,17 +122,15 @@ public class ConfigHandler {
      * @return Path to the folder/file
      */
     String validateFileFolder(){
-        Scanner scan = new Scanner(System.in);
-        File verification = new File(scan.nextLine());
+        File verification = new File(scanner.nextLine());
 
         while (!verification.exists()){
             System.out.println("Folder/File not found: " + verification);
             System.out.println("Please enter a valid folder/file location: ");
-            scan = new Scanner(System.in);
-            verification = new File(scan.next());
+            scanner = new Scanner(System.in);
+            verification = new File(scanner.next());
 
         }
-        scan.close();
         return verification.toString();
     }
 
@@ -134,8 +144,9 @@ public class ConfigHandler {
             myWriter.close();
             System.out.println("Successfully wrote to the file: " + fileToWrite);
           } catch (Exception e) {
-            System.out.println("An error occurred.");
+            System.err.println("Error in ConfigHandler.writeDefault()");
             e.printStackTrace();
+            System.exit(-1);
           }
     }
 
