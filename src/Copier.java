@@ -105,10 +105,11 @@ public class Copier {
         this.filesScanned++;
         
         try {
-            if (this.ENABLE_COPY)
+            if (this.ENABLE_COPY){
               Files.copy(src.toPath(), dest.toPath());
+              System.out.println("File successfully copied: " + src.toString());
+            }
           this.filesCopied++;          
-          System.out.println("File successfully copied: " + src.toString());
         } catch (FileAlreadyExistsException e){
             // Error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
