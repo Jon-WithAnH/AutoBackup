@@ -8,10 +8,10 @@ import src.ConfigPackage.ConfigHandler;
 
 
 public class Copier {
-    Boolean ENABLE_COPY = true;
+    Boolean ENABLE_COPY;
     
-    ConfigHandler cHandler = new ConfigHandler();
-    StringBuilder placementDirectories = cHandler.readPlacementDirectory();
+    ConfigHandler cHandler;
+    StringBuilder placementDirectories;
 
     /** Used to store the values of working directories that will be used to copy the new file. Holds the string for the .. name. */
     String currentParent;
@@ -20,9 +20,22 @@ public class Copier {
     int parentStart;
 
     /** Incremented every time a file is successfully copied. */
-    int filesCopied = 0; 
+    int filesCopied; 
     /** Incremented every time a file is scanned, regardless of it's copy status. */
-    int filesScanned = 0;
+    int filesScanned;
+
+    public Copier(){
+        this.cHandler = new ConfigHandler();
+        this.placementDirectories = cHandler.readPlacementDirectory();
+        this.filesCopied = 0;
+        this.filesScanned = 0;
+    }
+
+    public Copier(boolean copyStatus){
+        this();
+        this.ENABLE_COPY = copyStatus;
+
+    }
 
     /**
      * Main function of the class. It goes.
@@ -52,7 +65,7 @@ public class Copier {
      * @param f A file or a Directory
      */
     private void getLinksInDir(File f) {
-            // Hidden folders are oftened used as caches for programs. We'll just skipped those.
+            // Hidden folders are often used as caches for programs. We'll just skipped those.
             if (f.isHidden()){
                 System.out.println(f + " is hidden & was skipped.");
                 this.filesScanned++;
@@ -109,7 +122,7 @@ public class Copier {
               Files.copy(src.toPath(), dest.toPath());
               System.out.println("File successfully copied: " + src.toString());
             }
-          this.filesCopied++;          
+          this.filesCopied++; // keep this outside of the if statement. It will still count files for dry-runs.
         } catch (FileAlreadyExistsException e){
             // Error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");

@@ -9,16 +9,21 @@ import java.io.PrintWriter;
 import java.lang.System;
 import java.util.Scanner;
 
-
 public class ConfigHandler {
+    /** Stores the parent directory for AutoBackup. eg %APPDATA% or user.home (depending on user OS)*/
     String appdataLocation;
+    /** Stores the actual location that AutoBackup will keep it's configuration files */
     String autoBackupFolder;
+    /** The full path leading to Directories.txt */
     public String directoriesToBackup;
-
+    /** The full path leading to PlacementLocations.txt */
     public String placementDirectory;
-    /** Used to prompt user for inputs into the two files to determine AutoBackup's configuration */
-    Scanner scanner;
 
+    /** Scanner to prompt user for inputs into the two files to determine AutoBackup's configuration */
+    Scanner scanner;
+    /** Return a new object with minimum required fields. If this is the first time the user runs the program, this constructor will also require the user
+     * to input a backup location for the program to store files, and an input for a desired file/folder the user wants to backup.
+     */
     public ConfigHandler(){
         this.appdataLocation = System.getenv("APPDATA");
         if (this.appdataLocation == null) // occurs when user OS is linux
@@ -154,10 +159,9 @@ public class ConfigHandler {
         assert whichDirectory == this.directoriesToBackup || whichDirectory == this.placementDirectory: "whichDirectory must match either directories.txt or placementlocations.txt";
 
         File f = new File(directoryToAdd);
-        if (whichDirectory.equals(this.directoriesToBackup)) // we don't care if the directory doesn't exist where the backup is going to be made. That will be created later.
-            if (!f.exists()){
-                System.err.println("Usage: Directory provided is not found: " + f.toString());
-                return false;
+        if (whichDirectory.equals(this.directoriesToBackup)) 
+            if (!f.exists()){ // we don't care if the directory doesn't exist where the backup is going to be made. That will be created later.
+                return true;
             }
         try {
             FileWriter fw = new FileWriter(whichDirectory, true);
