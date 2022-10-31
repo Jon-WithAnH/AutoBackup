@@ -5,6 +5,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
 import src.ConfigPackage.ConfigHandler;
+import src.FileBackupNumTest.FileHandler;
 
 
 public class Copier {
@@ -24,12 +25,15 @@ public class Copier {
     /** Incremented every time a file is scanned, regardless of it's copy status. */
     int filesScanned;
 
+    int max_files;
+
     /**  */
     public Copier(){
         this.cHandler = new ConfigHandler();
         this.placementDirectories = cHandler.readPlacementDirectory();
         this.filesCopied = 0;
         this.filesScanned = 0;
+        this.max_files = 2;
         this.ENABLE_COPY = true;
     }
 
@@ -47,10 +51,14 @@ public class Copier {
         StringBuilder copyFromDirectories = cHandler.getDirectories();
 
         for (String s : placementDirectories.toString().split("\n")) {
+            FileHandler.renameAllFiles(new File(s));
+            // System.out.println(s);
+            s = s + File.separator + this.max_files;
+
             System.out.println("Placing into directory: " + s);
             File sFile = new File(s);
             if (!sFile.exists())
-                sFile.mkdir();
+                sFile.mkdirs();
             for (String cpDirectories : copyFromDirectories.toString().split("\n")) {
                 File cpDir = new File(cpDirectories);
                 int lastSlash = cpDirectories.lastIndexOf(File.separator);
@@ -100,7 +108,10 @@ public class Copier {
         int helper = f.toString().lastIndexOf(File.separator);
         // int lastSlash = f.toString().lastIndexOf("\\");
         for (String s : placementDirectories.toString().split("\n")) {
+            // FileHandler.renameAllFiles(s);
             // s will be made to hold the parent directory to the new file being made.
+            s = s + File.separator + this.max_files;
+
             s = String.join(File.separator, s, this.currentParent); // eg. E:\Backup Program\Radeon ReLive\Final Fantasy XIV
             // System.out.println(s);
             File newFile = new File(s);
@@ -122,7 +133,7 @@ public class Copier {
         try {
             if (this.ENABLE_COPY){
               Files.copy(src.toPath(), dest.toPath());
-              System.out.println("File successfully copied: " + src.toString());
+              System.out.println("File successfully copied: " + src.toString() + " to\t" + dest.toString());
             }
           this.filesCopied++; // keep this outside of the if statement. It will still count files for dry-runs.
         } catch (FileAlreadyExistsException e){

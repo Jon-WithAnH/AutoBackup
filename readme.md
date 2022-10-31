@@ -2,15 +2,15 @@
 
 ## About
 
-Autobackup's purpose is to allow for automated backing up of selected folders. The user can choose any amount of folders and the program will go through them in order of first added to last added, and place them in a directory that the user initally provides. The user can choose how many backups to keep and if they want it stored redundantly (on multiple devices). 
+AutoBackup's purpose is to allow for automated backing up of selected folders. The user can choose any amount of folders and the program will go through them in order of first added to last added, and place them in a directory that the user initially provides. The user can choose how many backups to keep and if they want it stored redundantly (on multiple devices).
 
 ## Usage
 
-To run this, you'll need to download Java. I'd recommend letting Java run with the default configuration, as this will put it in your environment variables and allow for easier running for this application, and possibly others. 
+To run this, you'll need to download Java. Letting Java run with the default configuration put it in your environment variables and allow for easier running for this application, and possibly others.
 
 Download the latest AutoBackup.jar file from [releases.](https://github.com/RandomProgrammer1124/AutoBackup/releases) 
 
-To run from cmd: 
+To run from cmd:
 ```
 java -jar AutoBackup.jar [args]
 ```
