@@ -24,11 +24,13 @@ public class Copier {
     /** Incremented every time a file is scanned, regardless of it's copy status. */
     int filesScanned;
 
+    /**  */
     public Copier(){
         this.cHandler = new ConfigHandler();
         this.placementDirectories = cHandler.readPlacementDirectory();
         this.filesCopied = 0;
         this.filesScanned = 0;
+        this.ENABLE_COPY = true;
     }
 
     public Copier(boolean copyStatus){
@@ -127,8 +129,10 @@ public class Copier {
             // Error that will occur if a file has already been copied of the same name.
             // System.err.println("Files already exists in backup location: \"" + dest.toString() + "\"");
         } catch (Exception e) {
-            System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" and " + dest.toString());
-            throw new RuntimeException(e.getMessage(), e);
+            System.err.println("Unexpected exception when coping files: \"" + src.toString() + "\" to " + dest.toString());
+            e.printStackTrace();
+            System.exit(-1);
+            // throw new RuntimeException(e.getMessage(), e);
         }
         
     }
