@@ -5,7 +5,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
 import src.ConfigPackage.ConfigHandler;
-import src.FileBackupNumTest.FileHandler;
+import src.FileBackupNum.FileHandler;
 
 
 public class Copier {
@@ -25,6 +25,7 @@ public class Copier {
     /** Incremented every time a file is scanned, regardless of it's copy status. */
     int filesScanned;
 
+    // TODO: This should be read from a configuration file or similar
     int max_files;
 
     /**  */
@@ -33,7 +34,7 @@ public class Copier {
         this.placementDirectories = cHandler.readPlacementDirectory();
         this.filesCopied = 0;
         this.filesScanned = 0;
-        this.max_files = 2;
+        this.max_files = 5;
         this.ENABLE_COPY = true;
     }
 
@@ -51,19 +52,27 @@ public class Copier {
         StringBuilder copyFromDirectories = cHandler.getDirectories();
 
         for (String s : placementDirectories.toString().split("\n")) {
-            FileHandler.renameAllFiles(new File(s));
-            // System.out.println(s);
+            // System.out.println(s);'
+            if (new File(s).listFiles().length < this.max_files) 
+                // it needs to build up more folders
+                // Changing max_files here is an easy solution to the problem.
+                // TODO: Consider something better
+                this.max_files = new File(s).listFiles().length+1;
+            else
+                if (ENABLE_COPY)
+                    FileHandler.renameAllFiles(new File(s));
             s = s + File.separator + this.max_files;
 
             System.out.println("Placing into directory: " + s);
             File sFile = new File(s);
-            if (!sFile.exists())
-                sFile.mkdirs();
+            if (ENABLE_COPY)
+                if (!sFile.exists())
+                    sFile.mkdirs();
             for (String cpDirectories : copyFromDirectories.toString().split("\n")) {
                 File cpDir = new File(cpDirectories);
                 int lastSlash = cpDirectories.lastIndexOf(File.separator);
                 String gameFolderName = cpDirectories.substring(lastSlash+1, cpDirectories.length());
-
+                System.out.println("Scanning folder \"" + cpDir.toString() + "\"");
                 this.currentParent = gameFolderName;
                 this.parentStart = lastSlash+1;
                 getLinksInDir(cpDir);
@@ -81,14 +90,14 @@ public class Copier {
                 this.filesScanned++;
                 return;
             }
-
-            File files[];
+            // System.out.println("Scanning folder" + f.toString());
             if(f.isFile()){
                 while (!f.toString().contains(this.currentParent)) // walk back folders if we are in a folder we shouldn't be, until we find the common folder and use that instead.
                     this.currentParent = this.currentParent.substring(0, this.currentParent.lastIndexOf(File.separator));
                 prepareFileForCopy(f);
                 }// System.out.println(f.getAbsolutePath());
             else{
+                File files[];
                 files = f.listFiles();
                 this.currentParent = f.toString().substring(this.parentStart); // update parent directory as we go further into recursion
                 for (int i = 0; i < files.length; i++) {
@@ -106,9 +115,7 @@ public class Copier {
      */
     private void prepareFileForCopy(File f) {
         int helper = f.toString().lastIndexOf(File.separator);
-        // int lastSlash = f.toString().lastIndexOf("\\");
         for (String s : placementDirectories.toString().split("\n")) {
-            // FileHandler.renameAllFiles(s);
             // s will be made to hold the parent directory to the new file being made.
             s = s + File.separator + this.max_files;
 
@@ -116,13 +123,14 @@ public class Copier {
             // System.out.println(s);
             File newFile = new File(s);
             if (!newFile.exists())
-                newFile.mkdirs(); // create all directories leading up to where the new file will exist
+                if (ENABLE_COPY)
+                    newFile.mkdirs(); // create all directories leading up to where the new file will exist
 
             String dest = String.join(File.separator, s, f.toString().substring(helper+1)); // This is the new location of the file, with the file name at the end
 
             actualCopy(f, new File(dest));            
             // else
-            //     System.out.println(f.toString() + " GOES TO " + dest);
+            // System.out.println(f.toString() + " GOES TO " + dest);
         }
 
     }
@@ -133,7 +141,7 @@ public class Copier {
         try {
             if (this.ENABLE_COPY){
               Files.copy(src.toPath(), dest.toPath());
-              System.out.println("File successfully copied: " + src.toString() + " to\t" + dest.toString());
+            //   System.out.println("File successfully copied: " + src.toString() + " to\t" + dest.toString());
             }
           this.filesCopied++; // keep this outside of the if statement. It will still count files for dry-runs.
         } catch (FileAlreadyExistsException e){

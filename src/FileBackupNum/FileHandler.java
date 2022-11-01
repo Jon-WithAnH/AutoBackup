@@ -1,4 +1,4 @@
-package src.FileBackupNumTest;
+package src.FileBackupNum;
 
 import java.io.File;
 
@@ -71,7 +71,7 @@ public class FileHandler {
         s = hm.toString();
         deleteAllFiles(hm);
         if (!hm.delete()){
-            System.out.println("ERROR: Folder must be empty \"" + hm.toString() + "\"");
+            System.err.println("ERROR: Folder must be empty \"" + hm.toString() + "\"");
             return;
         }
         // then iterate through all the remaining folders renaming them as we go
