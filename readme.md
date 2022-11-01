@@ -22,8 +22,8 @@ java -jar AutoBackup.jar [args]
 - [x] Backup Types
   - [x] Files
   - [x] Folders
-- [ ] Mode changing
+- [x] Mode changing
   - [x] Mode to allow for an iterative backup that doesn't store multiple copies of backups. Just unique files
-  - [ ] Mode to backup all given files n number of times
-- [ ] Install script
-- [ ] Uninstall script
+  - [x] Mode to backup all given files n number of times
+- <s> Install script
+-  Uninstall script </s>
